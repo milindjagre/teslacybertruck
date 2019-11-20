@@ -40,7 +40,7 @@ public class MachETwitterAnalysis {
 	public static List<String> getPositiveWords() throws IOException {
 		List<String> outputList = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(
-				"C:\\Users\\MJAGRE\\Desktop\\mache\\positive-words.txt"));
+				"C:\\positive-words.txt"));
 		String line = null;
 		while ((line = br.readLine()) != null) {
 			outputList.add(line);
@@ -53,7 +53,7 @@ public class MachETwitterAnalysis {
 	public static List<String> getNegativeWords() throws IOException {
 		List<String> outputList = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(
-				"C:\\Users\\MJAGRE\\Desktop\\mache\\negative-words.txt"));
+				"C:\\negative-words.txt"));
 		String line = null;
 		while ((line = br.readLine()) != null) {
 			outputList.add(line);
@@ -66,7 +66,7 @@ public class MachETwitterAnalysis {
 	public static List<String> getStopWords() throws IOException {
 		List<String> outputList = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(
-				"C:\\Users\\MJAGRE\\Desktop\\mache\\nlp_en_stop_words.txt"));
+				"C:\\nlp_en_stop_words.txt"));
 		String line = null;
 		while ((line = br.readLine()) != null) {
 			outputList.add(line);
@@ -114,7 +114,7 @@ public class MachETwitterAnalysis {
 		List<String> globalNegativeWordsList = getNegativeWords();
 		Map<String, Integer> negativeWordsMap = new HashMap<String, Integer>();
 		InputStream dataIn = new FileInputStream(
-				"C:\\Users\\MJAGRE\\Desktop\\mache\\tweets.txt");
+				"C:\\tweets.txt");
 		ObjectStream<String> lineStream = new PlainTextByLineStream(dataIn,
 				"UTF-8");
 		ObjectStream<DocumentSample> sampleStream = new DocumentSampleStream(
@@ -124,7 +124,7 @@ public class MachETwitterAnalysis {
 
 		int positiveCounts = 0, negativeCounts = 0;
 		BufferedReader br = new BufferedReader(new FileReader(
-				"C:\\Users\\MJAGRE\\Desktop\\mache\\MustangMachE_Tweets.csv"));
+				"C:\\MustangMachE_Tweets.csv"));
 		String line = null, mapKey = null;
 		String[] lineSplitter = null;
 		int i = 0;
