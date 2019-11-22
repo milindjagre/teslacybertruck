@@ -1,4 +1,4 @@
-package mj.mache;
+package mj.cybertruck;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,14 +20,12 @@ import opennlp.tools.doccat.DocumentSampleStream;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
-public class MachETwitterAnalysis {
+public class CyberTruckTwitterAnalysis {
 
 	/**
 	 * @param args
 	 */
 
-	// This method classified the text/tweet into two classification - positive or negative
-	// The categorize() returns 1 for positive text and 0 for negative.
 	public static int classifyNewText(DoccatModel sentimentModel, String input)
 			throws IOException {
 		DocumentCategorizerME myCategorizer = new DocumentCategorizerME(
@@ -36,7 +34,6 @@ public class MachETwitterAnalysis {
 		return Integer.parseInt(myCategorizer.getBestCategory(outcomes));
 	}
 
-	// This method returns the list of all positive words.
 	public static List<String> getPositiveWords() throws IOException {
 		List<String> outputList = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(
@@ -49,7 +46,6 @@ public class MachETwitterAnalysis {
 		return outputList;
 	}
 
-	// This method returns the list of all negative words.
 	public static List<String> getNegativeWords() throws IOException {
 		List<String> outputList = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(
@@ -62,7 +58,6 @@ public class MachETwitterAnalysis {
 		return outputList;
 	}
 
-	// This method returns the list of all stop words in English language.
 	public static List<String> getStopWords() throws IOException {
 		List<String> outputList = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(
@@ -75,9 +70,6 @@ public class MachETwitterAnalysis {
 		return outputList;
 	}
 
-	// This method returns the value sorted hashmap of the input hashmap.
-	// We use this method to calculate the most used positive, negative words.
-	// This method is helpful to construct the word list for word cloud too.
 	public static LinkedHashMap<String, Integer> sortHashMapByValues(
 			Map<String, Integer> wordCountMap) {
 		List<String> mapKeys = new ArrayList<String>(wordCountMap.keySet());
@@ -105,7 +97,6 @@ public class MachETwitterAnalysis {
 		return sortedMap;
 	}
 
-	// main() method
 	public static void main(String[] args) throws IOException {
 		Map<String, Integer> wordCountMap = new HashMap<String, Integer>();
 		List<String> stopWordsList = getStopWords();
@@ -124,16 +115,28 @@ public class MachETwitterAnalysis {
 
 		int positiveCounts = 0, negativeCounts = 0;
 		BufferedReader br = new BufferedReader(new FileReader(
-				"C:\\MustangMachE_Tweets.csv"));
-		String line = null, mapKey = null;
+				"C:\\CyberTruck_Tweets.csv"));
+		String line = null, cleanLine = null, mapKey = null;
 		String[] lineSplitter = null;
 		int i = 0;
 		while ((line = br.readLine()) != null) {
-			if (classifyNewText(sentimentModel, line) == 1)
+			cleanLine = line
+					.replace("https:\\/\\/tco\\/yPc30\\xe2\\x80\\xa6", "")
+					.replace("\\xf0\\x9f\\x91\\x87", "").replaceAll("\n", " ")
+					.replace("https:\\/\\/tco\\/Ptc\\xe2\\x80\\xa6", "")
+					.replace("\\xf0\\x9f\\x91\\x8a\\xf0\\x9f\\x8f\\xbe", "")
+					.replace("https:\\/\\/tco\\/pCxyhkfBbD\"", "")
+					.replace("https:\\/\\/tco\\/6F4ZCUrl\\xe2\\x80\\xa6", "")
+					.replace("\\xe2\\x80\\x98", "")
+					.replace("\\xe2\\x80\\x99", "")
+					.replace("\\xe2\\x80\\xa6", "").replace("\"", "")
+					.replace("\\xe2\\x80\\x93", "")
+					.replace("https://tco/yPc30", "");
+			if (classifyNewText(sentimentModel, cleanLine) == 1)
 				positiveCounts++;
-			if (classifyNewText(sentimentModel, line) == 0)
+			if (classifyNewText(sentimentModel, cleanLine) == 0)
 				negativeCounts++;
-			lineSplitter = line.split(" ");
+			lineSplitter = cleanLine.split(" ");
 			for (i = 0; i < lineSplitter.length; i++) {
 				mapKey = lineSplitter[i].replaceAll("[\\.\\',\\?]", "");
 				if (!(stopWordsList.contains(mapKey)) && mapKey.length() > 3) {
@@ -165,9 +168,10 @@ public class MachETwitterAnalysis {
 		System.out.println("***TOP 10 MOST USED WORDS***");
 		int count = 0;
 		for (Entry<String, Integer> entry : sortedWordCountMap.entrySet()) {
-			if (count < 10)
+			// if (count < 10)
+			if (entry.getValue() > 10)
 				System.out.println(entry.getKey() + " - " + entry.getValue());
-			count++;
+			// count++;
 		}
 		System.out
 				.println("\n----------------------------------------------------------------");
